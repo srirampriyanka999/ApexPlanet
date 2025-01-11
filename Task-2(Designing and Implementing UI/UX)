@@ -1,0 +1,48 @@
+# Import necessary libraries
+from flask import Flask, render_template_string, request
+from flask_ngrok import run_with_ngrok
+
+# Initialize Flask app
+app = Flask(__name__)
+run_with_ngrok(app)  # Enables ngrok to expose the app to the internet
+
+# HTML Template with Inline CSS for UI/UX Design
+HTML_CODE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form action="/submit" method="post">
+        <label>Username</label>
+        <input type="text" name="username" required><br>
+        <label>Password</label>
+        <input type="password" name="password" required><br>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>
+"""
+
+# Route to display the login page
+@app.route('/')
+def home():
+    return render_template_string(HTML_CODE)
+
+# Route to handle form submission
+@app.route('/submit', methods=['POST'])
+def submit():
+    # Fetch username from form
+    username = request.form.get('username')
+    return f"""
+    <h1>Login Successful!</h1>
+    <p>Welcome, {username}!</p>
+    <a href="/">Go Back</a>
+    """
+
+# Run the Flask app
+app.run()
